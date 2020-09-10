@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Items;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -44,12 +46,14 @@ namespace AboveAPI
       services.AddSwaggerGen(option =>
       {
         option.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+        option.CustomSchemaIds(type => type.ToString());
       });
 
       services.AddDbContext<DataContext>(options =>
           options.UseSqlServer(Configuration.GetConnectionString("sqlDatabase"))
       );
 
+      services.AddMediatR(typeof(List.Handler).Assembly);
       services.AddControllers();
     }
 
