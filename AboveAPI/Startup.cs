@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using AutoMapper;
 
 namespace AboveAPI
 {
@@ -46,7 +47,7 @@ namespace AboveAPI
             builder =>
             {
                 builder.WithOrigins("http://localhost:3000",
-                    "replaceThisByYourHostedUrl.com")
+                    "https://aboveserver.database.windows.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -59,11 +60,17 @@ namespace AboveAPI
             });
 
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("sqlDatabase"))
-            );
+            {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(Configuration.GetConnectionString("sqlDatabase"));
+            });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddControllers(option => {
+
+            services.AddAutoMapper(typeof(List.Handler));
+
+            services.AddControllers(option =>
+            {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 option.Filters.Add(new AuthorizeFilter(policy));
             });
@@ -76,7 +83,9 @@ namespace AboveAPI
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));//
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
                 {

@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,61 +11,83 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
-            if (!context.Items.Any())
-            {
-                var items = new List<Item>
-                {
-                    new Item
-                    {
-                        Name = "Mars",
-                        Description = "Planet 1",
-                        Possession = "Bob"
-                    },
-                    new Item
-                    {
-                        Name = "Uranus",
-                        Description = "Planet 3",
-                        Possession = "Vicky"
-                    },
-                    new Item
-                    {
-                        Name = "Venus",
-                        Description = "Planet 4",
-                        Possession = "Ben"
-                    },
-                };
-
-                context.Items.AddRange(items);
-                context.SaveChanges();
-            }
-
             if (!userManager.Users.Any())
             {
                 var users = new List<AppUser>
                 {
                     new AppUser
                     {
-                        Name = "Ponhvath",
-                        UserName = "ponhvath",
-                        Email = "ponhvath@email.com"
+                        Id = "a",
+                        Name = "Bob",
+                        UserName = "bob",
+                        Email = "bob@test.com"
                     },
                     new AppUser
                     {
-                        Name = "Vick",
-                        UserName = "vick",
-                        Email = "vick@email.com"
+                        Id = "b",
+                        Name = "Jane",
+                        UserName = "jane",
+                        Email = "jane@test.com"
                     },
                     new AppUser
                     {
-                        Name = "Bill",
-                        UserName = "bill",
-                        Email = "bill@email.com"
-                    }
+                        Id = "c",
+                        Name = "Tom",
+                        UserName = "tom",
+                        Email = "tom@test.com"
+                    },
                 };
+
                 foreach (var user in users)
                 {
-                    await userManager.CreateAsync(user, "WhatIsMyPass123");
+                    await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
+            }
+
+            if (!context.Items.Any())
+            {
+                var items = new List<Item>
+                {
+                    new Item
+                    {
+                        Name = "Earth",
+                        Description = "Planet1",
+                        Possession = "Bob",
+                        Bids = new List<Bid>
+                        {
+                            new Bid
+                            {
+                                AppUserId = "a",
+                                Price = 200,
+                                Timestamp = DateTime.Now
+                            }
+                        }
+                    },
+                    new Item
+                    {
+                        Name = "Pluto",
+                        Description = "Planet2",
+                        Possession = "Bill",
+                        Bids = new List<Bid>
+                        {
+                            new Bid
+                            {
+                                AppUserId = "a",
+                                Price = 200,
+                                Timestamp = DateTime.Now
+                            },
+                            new Bid
+                            {
+                                AppUserId = "c",
+                                Price = 200,
+                                Timestamp = DateTime.Now
+                            }
+                        }
+                    },
+                };
+
+                await context.Items.AddRangeAsync(items);
+                await context.SaveChangesAsync();
             }
         }
     }

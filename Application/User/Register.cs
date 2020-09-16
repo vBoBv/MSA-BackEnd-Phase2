@@ -19,7 +19,7 @@ namespace Application.User
     {
         public class Command : IRequest<User>
         {
-            public string DisplayName { get; set; }
+            public string Name { get; set; }
             public string Username { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
@@ -48,7 +48,7 @@ namespace Application.User
 
                 var user = new AppUser
                 {
-                    Name = request.DisplayName,
+                    Name = request.Name,
                     Email = request.Email,
                     UserName = request.Username
                 };

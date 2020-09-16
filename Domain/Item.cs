@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain
@@ -10,5 +11,7 @@ namespace Domain
     public string Name { get; set; }
     public string Description { get; set; }
     public string Possession { get; set; }
+
+    public virtual ICollection<Bid> Bids { get; set; }
   }
 }
