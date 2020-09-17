@@ -13,5 +13,6 @@ namespace Domain
     public string Possession { get; set; }
 
     public virtual ICollection<Bid> Bids { get; set; }
+    public virtual ICollection<Discussion> Discussions { get; set; } 
   }
 }

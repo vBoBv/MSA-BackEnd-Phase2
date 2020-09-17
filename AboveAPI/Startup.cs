@@ -25,6 +25,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
+using AboveAPI.SignalR;
 
 namespace AboveAPI
 {
@@ -44,14 +45,15 @@ namespace AboveAPI
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
-            builder =>
-            {
-                builder.WithOrigins("http://localhost:3000",
-                    "https://aboveyou.azurewebsites.net",
-                    "http://aboveyou.azurewebsites.net")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000",
+                            "https://aboveyou.azurewebsites.net",
+                            "http://aboveyou.azurewebsites.net")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
             });
 
             services.AddSwaggerGen(option =>
@@ -69,6 +71,8 @@ namespace AboveAPI
             services.AddMediatR(typeof(List.Handler).Assembly);
 
             services.AddAutoMapper(typeof(List.Handler));
+
+            services.AddSignalR();
 
             services.AddControllers(option =>
             {
@@ -96,6 +100,19 @@ namespace AboveAPI
                         IssuerSigningKey = key,
                         ValidateAudience = false,
                         ValidateIssuer = false
+                    };
+                    option.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/forum")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
         }
@@ -128,6 +145,7 @@ namespace AboveAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

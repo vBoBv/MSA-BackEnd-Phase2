@@ -11,6 +11,8 @@ namespace Persistence
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Bid> Bids { get; set; }
+        public DbSet<Discussion> Discussions { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
