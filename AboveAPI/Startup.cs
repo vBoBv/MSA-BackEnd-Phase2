@@ -47,7 +47,8 @@ namespace AboveAPI
             builder =>
             {
                 builder.WithOrigins("http://localhost:3000",
-                    "https://aboveyou.azurewebsites.net")
+                    "https://aboveyou.azurewebsites.net",
+                    "http://aboveyou.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -84,7 +85,7 @@ namespace AboveAPI
             services.AddScoped<IUserAccessor, UserAccessor>();
 
             //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));//
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option =>
