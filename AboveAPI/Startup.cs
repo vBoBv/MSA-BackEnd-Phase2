@@ -47,7 +47,7 @@ namespace AboveAPI
             builder =>
             {
                 builder.WithOrigins("http://localhost:3000",
-                    "https://aboveserver.database.windows.net")
+                    "https://aboveyou.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });

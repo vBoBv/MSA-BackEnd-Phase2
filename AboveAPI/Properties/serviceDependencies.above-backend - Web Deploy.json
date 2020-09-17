@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/aboveserver/databases/AboveDb",
+      "type": "mssql.azure",
+      "connectionId": "sqlDatabase",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
