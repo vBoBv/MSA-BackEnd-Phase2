@@ -49,11 +49,5 @@ namespace AboveAPI.Controllers
         {
             return await Mediator.Send(new PlaceBid.Command { Id = id });
         }
-
-        [HttpDelete("{id}/placebid")]
-        public async Task<ActionResult<Unit>> CancelBid(Guid id)
-        {
-            return await Mediator.Send(new Delete.Command { Id = id });
-        }
     }
 }
